@@ -1,0 +1,37 @@
+{
+  "routes": [
+    {
+      "route": "/static/*",
+      "headers": {
+        "cache-control": "must-revalidate, max-age=15770000"
+      }
+    },
+    {
+      "route": "*",
+      "allowedRoles": ["admin", "editor", "readonly", "reader","anonymous"]
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "index.html",
+    "exclude": ["/static/*.{png,jpg,gif}", "/css/*"]
+  },
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/aad?post_login_redirect_uri=.referrer",
+      "statusCode": 302,
+      "exclude": ["/assets/illustrations/*.{png,jpg,gif}", "/css/*"]
+    },
+    "403": {
+      "rewrite": "/cipp/403"
+    },
+    "404": {
+      "rewrite": "/cipp/404"
+    }
+  },
+  "globalHeaders": {
+    "content-security-policy": "default-src https: 'unsafe-eval' 'unsafe-inline'; object-src 'none'; img-src 'self' data: *"
+  },
+  "mimeTypes": {
+    ".json": "text/json"
+  }
+}
