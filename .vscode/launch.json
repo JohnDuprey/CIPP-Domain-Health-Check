@@ -12,7 +12,6 @@
       "name": "Run frontend",
       "request": "launch",
       "type": "node-terminal",
-      "preLaunchTask": "RunAllTasks",
       "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
     }
   ],
