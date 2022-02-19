@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Field } from 'react-final-form'
-import { useSearchParams } from 'react-router-dom'
 import { useExecDnsHelperQuery } from 'src/store/api/domains'
 import { CippCodeBlock, CippOffcanvas, StatusIcon } from 'src/components/utilities'
 import { OffcanvasListSection } from 'src/components/utilities/CippListOffcanvas'
