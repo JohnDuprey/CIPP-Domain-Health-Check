@@ -12,7 +12,18 @@
       "name": "Run frontend",
       "request": "launch",
       "type": "node-terminal",
-      "resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"]
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ]
+    },
+    {
+      "name": "Attach to PowerShell Functions",
+      "type": "PowerShell",
+      "request": "attach",
+      "customPipeName": "AzureFunctionsPSWorker",
+      "runspaceId": 1,
+      "preLaunchTask": "func: host start"
     }
   ],
   "compounds": [
