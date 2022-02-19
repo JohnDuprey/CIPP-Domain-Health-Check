@@ -1,9 +1,0 @@
-{
-    "Name": "SpamTitan",
-    "_MxComment": "https://docs.titanhq.com/en/540-change-your-mx-records.html",
-    "MxMatch": "spamtitan.com",
-    "_SpfComment": "",
-    "SpfInclude": "",
-    "_DkimComment": "",
-    "Selectors": [""]
-}
