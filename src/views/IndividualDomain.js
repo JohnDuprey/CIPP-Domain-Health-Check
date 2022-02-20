@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Field } from 'react-final-form'
-import { useExecDnsHelperQuery } from 'src/store/api/domains'
+import { useListDomainHealthQuery } from 'src/store/api/domains'
 import { useSearchParams } from 'react-router-dom'
 import { CippCodeBlock, CippOffcanvas, StatusIcon } from 'src/components/utilities'
 import { OffcanvasListSection } from 'src/components/utilities/CippListOffcanvas'
@@ -524,13 +524,13 @@ ResultsCard.propTypes = {
 }
 
 const SPFResultsCard = ({ domain, spfOverride }) => {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'ReadSpfRecord',
     Record: spfOverride,
   })
 
-  const { data: doc } = useExecDnsHelperQuery({
+  const { data: doc } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'ReadMXRecord',
   })
@@ -662,7 +662,7 @@ function WhoisResultCard({ domain }) {
     data: whoisReport,
     isFetching,
     error,
-  } = useExecDnsHelperQuery({ Domain: domain, Action: 'ReadWhoisRecord' })
+  } = useListDomainHealthQuery({ Domain: domain, Action: 'ReadWhoisRecord' })
   const jsonContent = JSON.stringify(whoisReport, null, 2)
 
   let whoisContent = []
@@ -734,7 +734,7 @@ function NSResultCard({ domain }) {
     data: nsReport,
     isFetching,
     error,
-  } = useExecDnsHelperQuery({ Domain: domain, Action: 'ReadNSRecord' })
+  } = useListDomainHealthQuery({ Domain: domain, Action: 'ReadNSRecord' })
 
   const content = []
   if (nsReport?.Records.length > 0) {
@@ -762,7 +762,7 @@ function NSResultCard({ domain }) {
 NSResultCard.propTypes = sharedProps
 
 const HttpsResultCard = ({ domain, httpsOverride }) => {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'TestHttpsCertificate',
     Subdomains: httpsOverride,
@@ -828,7 +828,7 @@ const HttpsResultCard = ({ domain, httpsOverride }) => {
 HttpsResultCard.propTypes = { httpsOverride: PropTypes.string, ...sharedProps }
 
 const MtaStsResultCard = ({ domain }) => {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'TestMtaSts',
   })
@@ -864,7 +864,7 @@ const MtaStsResultCard = ({ domain }) => {
       error={error}
       errorMessage="Unable to load MTA-STS Results"
     >
-      {!isFetching && !error && (
+      {!isFetching && !error && data && (
         <CippOffcanvas
           id="mtasts-offcanvas"
           visible={visible}
@@ -875,29 +875,29 @@ const MtaStsResultCard = ({ domain }) => {
         >
           <DomainOffcanvasTabs jsonContent={jsonContent}>
             <h4>MTA-STS Record</h4>
-            {data.StsRecord.Record !== '' && (
+            {data?.StsRecord.Record && data?.StsRecord.Record !== undefined && (
               <CippCodeBlock
                 language="text"
-                code={data.StsRecord.Record}
+                code={data?.StsRecord.Record}
                 showLineNumbers={false}
                 wrapLongLines={true}
               />
             )}
-            <ValidationListContent data={data.StsRecord} />
+            <ValidationListContent data={data?.StsRecord} />
 
             <OffcanvasListSection title="MTA-STS Policy" items={stsProperties} />
             <ValidationListContent data={data?.StsPolicy} />
 
             <h4 className="mt-4">TLSRPT Record</h4>
-            {data.TlsRptRecord.Record !== '' && (
+            {data?.TlsRptRecord.Record && data?.TlsRptRecord.Record !== undefined && (
               <CippCodeBlock
                 language="text"
-                code={data.TlsRptRecord.Record}
+                code={data?.TlsRptRecord.Record}
                 showLineNumbers={false}
                 wrapLongLines={true}
               />
             )}
-            <ValidationListContent data={data.TlsRptRecord} />
+            <ValidationListContent data={data?.TlsRptRecord} />
           </DomainOffcanvasTabs>
         </CippOffcanvas>
       )}
@@ -908,7 +908,7 @@ const MtaStsResultCard = ({ domain }) => {
 MtaStsResultCard.propTypes = sharedProps
 
 const MXResultsCard = ({ domain }) => {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'ReadMXRecord',
   })
@@ -974,7 +974,7 @@ const MXResultsCard = ({ domain }) => {
 MXResultsCard.propTypes = sharedProps
 
 function DMARCResultsCard({ domain }) {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'ReadDmarcPolicy',
   })
@@ -1094,16 +1094,13 @@ function DMARCResultsCard({ domain }) {
 DMARCResultsCard.propTypes = sharedProps
 
 function DNSSECResultsCard({ domain }) {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'TestDNSSEC',
   })
   let keys = data?.Keys
   const jsonContent = JSON.stringify(data, null, 2)
 
-  if (!Array.isArray(keys)) {
-    keys = []
-  }
   const [visible, setVisible] = useState(false)
 
   const headerClickFunction = () => {
@@ -1132,10 +1129,9 @@ function DNSSECResultsCard({ domain }) {
         hideFunction={() => setVisible(false)}
         title="DNSSEC Details"
       >
-        {!isFetching && !error && (
+        {!isFetching && !error && data && (
           <DomainOffcanvasTabs jsonContent={jsonContent}>
-            {keys.length >
-            (
+            {keys.length > 0 && (
               <>
                 {keys.map((key, idx) => (
                   <CippCodeBlock
@@ -1158,13 +1154,13 @@ function DNSSECResultsCard({ domain }) {
 DNSSECResultsCard.propTypes = sharedProps
 
 function DKIMResultsCard({ domain, dkimOverride }) {
-  const { data, isFetching, error } = useExecDnsHelperQuery({
+  const { data, isFetching, error } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'ReadDkimRecord',
     Selector: dkimOverride,
   })
   const [visible, setVisible] = useState(false)
-  const { data: doc } = useExecDnsHelperQuery({
+  const { data: doc } = useListDomainHealthQuery({
     Domain: domain,
     Action: 'ReadMXRecord',
   })
@@ -1195,7 +1191,7 @@ function DKIMResultsCard({ domain, dkimOverride }) {
         error={error}
         errorMessage="Unable to load DKIM Results"
       />
-      {!isFetching && !error && (
+      {!isFetching && !error && records && (
         <CippOffcanvas
           id="dkim-offcanvas"
           visible={visible}

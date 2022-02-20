@@ -22,30 +22,38 @@ function CippCodeBlock({
   }
 
   return (
-    <div className="cipp-code">
-      <CopyToClipboard text={code} onCopy={() => onCodeCopied()}>
-        <CButton
-          color={codeCopied ? 'success' : 'info'}
-          className="cipp-code-copy-button"
-          size="sm"
-          variant="ghost"
-        >
-          {codeCopied ? <FontAwesomeIcon icon={faClipboard} /> : <FontAwesomeIcon icon={faCopy} />}
-        </CButton>
-      </CopyToClipboard>
+    <>
+      {code !== undefined && (
+        <div className="cipp-code">
+          <CopyToClipboard text={code} onCopy={() => onCodeCopied()}>
+            <CButton
+              color={codeCopied ? 'success' : 'info'}
+              className="cipp-code-copy-button"
+              size="sm"
+              variant="ghost"
+            >
+              {codeCopied ? (
+                <FontAwesomeIcon icon={faClipboard} />
+              ) : (
+                <FontAwesomeIcon icon={faCopy} />
+              )}
+            </CButton>
+          </CopyToClipboard>
 
-      <SyntaxHighlighter
-        language={language}
-        showLineNumbers={showLineNumbers}
-        startingLineNumber={startingLineNumber}
-        wrapLongLines={wrapLongLines}
-        wrapLines={wrapLongLines}
-        style={atomOneDark}
-        className="cipp-code-block"
-      >
-        {code}
-      </SyntaxHighlighter>
-    </div>
+          <SyntaxHighlighter
+            language={language}
+            showLineNumbers={showLineNumbers}
+            startingLineNumber={startingLineNumber}
+            wrapLongLines={wrapLongLines}
+            wrapLines={wrapLongLines}
+            style={atomOneDark}
+            className="cipp-code-block"
+          >
+            {code}
+          </SyntaxHighlighter>
+        </div>
+      )}
+    </>
   )
 }
 
