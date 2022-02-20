@@ -39,11 +39,11 @@ export const domainsApi = baseApi.injectEndpoints({
               clearInterval(interval)
               resolve({ data })
             }
-            if (retries >= 30) {
+            if (retries >= 60) {
               clearInterval(interval)
               resolve({
                 error: {
-                  message: 'Failed to retrieve data in 1 minute',
+                  message: 'Failed to retrieve data in 2 minutes',
                   status: 503,
                   data: 'Request failed with status 503',
                 },
@@ -57,4 +57,4 @@ export const domainsApi = baseApi.injectEndpoints({
   }),
 })
 
-export const { useExecDnsHelperQuery, useListDomainHealthQuery } = domainsApi
+export const { useListDomainHealthQuery } = domainsApi
