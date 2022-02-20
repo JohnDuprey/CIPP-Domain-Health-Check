@@ -1,13 +1,15 @@
 import React from 'react'
-import { CFooter, CLink } from '@coreui/react'
+import { CImage, CFooter, CLink } from '@coreui/react'
 import { Link } from 'react-router-dom'
+import cyberdrainsquare from 'src/assets/images/logo-square.png'
 
 const AppFooter = () => {
   return (
     <CFooter className="d-flex justify-content-between align-items-center">
       <div className="attribution">
         <p>
-          This site is built with the
+          <CImage src={cyberdrainsquare} height={25} alt="Logo" className="me-2" />
+          Powered by
           <CLink className="mx-1" href="https://cipp.app" target="_blank">
             CyberDrain Improved Partner Portal
           </CLink>
