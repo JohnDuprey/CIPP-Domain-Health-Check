@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Field } from 'react-final-form'
 import { useExecDnsHelperQuery } from 'src/store/api/domains'
+import { useSearchParams } from 'react-router-dom'
 import { CippCodeBlock, CippOffcanvas, StatusIcon } from 'src/components/utilities'
 import { OffcanvasListSection } from 'src/components/utilities/CippListOffcanvas'
 import { CippPage, CippMasonry, CippMasonryItem } from '../components/layout'
@@ -82,6 +83,7 @@ export function IndividualDomainCheck({
   readOnly = false,
   isOffcanvas = false,
 }) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [domain, setDomain] = useState('')
   const [spfOverride, setSpfOverride] = useState('')
   const [dkimOverride, setDkimOverride] = useState('')
@@ -91,16 +93,26 @@ export function IndividualDomainCheck({
   const [masonrySize, setMasonrySize] = useState()
 
   useEffect(() => {
+    if (initialDomain) {
+      searchParams.set('domain', initialDomain)
+    }
+    // check if domain query is set
+    const domainQuery = searchParams.get('domain')
+    if (domainQuery && domainQuery !== undefined) {
+      setDomain(domainQuery)
+    }
+
     if (isOffcanvas) {
       setMasonrySize('triple')
     } else {
       setMasonrySize('single')
     }
-  }, [isOffcanvas, initialDomain])
+  }, [searchParams, isOffcanvas, initialDomain])
 
   const onSubmit = (values) => {
     if (values.domain !== undefined) {
       setDomain(values.domain)
+      setSearchParams({ domain: values.domain }, { replace: true })
     }
 
     if (values.spfrecord !== spfOverride) {
