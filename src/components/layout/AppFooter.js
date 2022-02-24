@@ -11,7 +11,7 @@ const AppFooter = () => {
           <CImage src={cyberdrainsquare} height={25} alt="Logo" className="me-2" />
           Powered by
           <CLink className="mx-1" href="https://cipp.app" target="_blank">
-            CyberDrain Improved Partner Portal
+            CIPP
           </CLink>
         </p>
       </div>
