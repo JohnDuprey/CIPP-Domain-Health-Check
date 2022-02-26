@@ -128,7 +128,7 @@
       text-decoration: none;
 
       &:hover {
-        color: var(--cyberdrain-light-striped);
+        color: var(--cui-headings-color);
         cursor: pointer;
         text-decoration: underline;
       }
@@ -142,6 +142,10 @@
 
 .form-control {
   border-radius: var(--cipp-border-radius);
+
+  &:focus {
+    color: var(--cui-input-focus-color);
+  }
 }
 
 .form-select {

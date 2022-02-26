@@ -684,7 +684,6 @@ function WhoisResultCard({ domain }) {
           <FontAwesomeIcon icon={faGlobe} className="mx-2" /> WHOIS Results
         </CCardTitle>
         <CLink
-          href="#"
           onClick={() => {
             setVisible(true)
           }}
