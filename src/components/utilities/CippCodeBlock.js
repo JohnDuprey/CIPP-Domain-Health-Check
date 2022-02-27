@@ -5,7 +5,8 @@ import { CButton } from '@coreui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faClipboard } from '@fortawesome/free-regular-svg-icons'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { atomOneDark, atomOneLight } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { useSelector } from 'react-redux'
 
 function CippCodeBlock({
   code,
@@ -15,7 +16,12 @@ function CippCodeBlock({
   wrapLongLines = true,
 }) {
   const [codeCopied, setCodeCopied] = useState(false)
+  const currentTheme = useSelector((state) => state.app.currentTheme)
 
+  let codeStyle = atomOneDark
+  if (currentTheme === 'cyberdrain') {
+    codeStyle = atomOneLight
+  }
   const onCodeCopied = () => {
     setCodeCopied(true)
     setTimeout(() => setCodeCopied(false), 2000)
@@ -46,7 +52,7 @@ function CippCodeBlock({
             startingLineNumber={startingLineNumber}
             wrapLongLines={wrapLongLines}
             wrapLines={wrapLongLines}
-            style={atomOneDark}
+            style={codeStyle}
             className="cipp-code-block"
           >
             {code}
